@@ -161,8 +161,8 @@
 
   - **Page size** = 5 (configurable).
   - **Total pages** = `ceil(totalCount / pageSize)`.
-  - **Sortable columns** — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection); any other value falls
-  back to `id`.
+  - **Sortable columns** — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
+any other value falls back to `id`.
   - Column headers in `adminDashboard.jsp` are clickable links:
     ```html
     <a href="employees?page=1&sortBy=name">Name</a>
@@ -177,12 +177,12 @@
     EmailUtil.sendEmail(email, "Welcome to EMS",
         "Hi " + name + ", your employee profile has been created.");
     ```
-  - `EmailUtil` uses **Gmail SMTP** (`smtp.gmail.com:587`) with **TLS** and an **App Password** (2FA must be enabled on the sender's Gmail
-  account).
+  - `EmailUtil` uses **Gmail SMTP** (`smtp.gmail.com:587`) with **TLS** and an **App Password** (2FA must be enabled on the
+sender's Gmail account).
   - The same helper can be invoked from `UpdateEmployeeServlet` for edit notifications.
 
-  > ⚠️  **Security note:** For production, move the credentials to environment variables / JNDI. The current `EmailUtil.java` has the App
-  Password inline for academic/demo purposes.
+  > ⚠️  **Security note:** The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its best
+to move the credentials to environment variables / JNDI.
 
   ### 5. Deployment on Apache Tomcat
   1. Build the WAR:
@@ -196,9 +196,9 @@
      ```
   3. Start Tomcat:
      ```bash
-     $CATALINA_HOME/bin/startup.bat     # Windows
+     $CATALINA_HOME/bin/startup.bat     
      ```
-  4. Open the browser:
+  4. Open the browser(Chrome):
      ```
      http://localhost:8080/EmployeeManagementSystem-1.0/
      ```
@@ -277,5 +277,5 @@
   ## 👤 Author
   **Name:** Diptangshu Das
   **Assignment:** Case Study 2 — Employee Management System (Assignment No. 10)
-  **Course:** Advance Java
+  **Course:** Advance Java with Web Application 
   **Team Type:** Individual
