@@ -133,16 +133,16 @@
 
   ## 🧩 Module-wise Description
 
-  ### 1. Login Authentication
-  - **`LoginServlet`** (`/login`) accepts `username` and `password` via POST.
-  - **`UserDAO.authenticate(...)`** runs a parameterised SQL query against the `users` table.
+  # 1. Login Authentication
+  - `LoginServlet` (`/login`) accepts `username` and `password` via POST.
+  - `UserDAO.authenticate(...)` runs a parameterised SQL query against the `users` table.
   - On success, an `HttpSession` is created with attributes `user` and `role`.
-  - **Role-based redirect**:
+  - Role-based redirect:
     - `admin` → 'adminDashboard.jsp'
     - `employee` → `employeeDashboard.jsp`
   - On failure, the user is sent back to `login.jsp` with an "Invalid credentials" message.
 
-  ### 2. CRUD Operations with JDBC
+  # 2. CRUD Operations with JDBC
   All DB calls go through `EmployeeDAO` using `PreparedStatement` (SQL-injection safe).
 
   | Operation | Servlet                       | DAO Method                  |
@@ -160,8 +160,8 @@
   Implemented inside `EmployeeListServlet` + `EmployeeDAO.getAll(page, pageSize, sortBy)`.
 
   - Page size = 5 (configurable).
-  - **Total pages** = `ceil(totalCount / pageSize)`.
-  - **Sortable columns** — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
+  - Total pages = `ceil(totalCount / pageSize)`.
+  - Sortable columns — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
 any other value falls back to `id`.
   - Column headers in `adminDashboard.jsp` are clickable links:
     ```html
@@ -171,7 +171,7 @@ any other value falls back to `id`.
     ```
   - Pagination links at the bottom preserve the current `sortBy`.
 
-  ### 4. Email Notification
+  # 4. Email Notification
   - After a successful `Add`, `AddEmployeeServlet` calls:
     ```java
     EmailUtil.sendEmail(email, "Welcome to EMS",
@@ -181,10 +181,10 @@ any other value falls back to `id`.
 sender's Gmail account).
   - The same helper can be invoked from `UpdateEmployeeServlet` for edit notifications.
 
-  > ⚠️  **Security note:** The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its best
+  > ⚠️  Security note: The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its best
 to move the credentials to environment variables / JNDI.
 
-  ### 5. Deployment on Apache Tomcat
+  #  5. Deployment on Apache Tomcat
   1. Build the WAR:
      ```bash
      mvn clean package
@@ -207,27 +207,27 @@ to move the credentials to environment variables / JNDI.
 
   ## ⚙ Setup & Installation
 
-  ### Prerequisites
+  # Prerequisites
   - **JDK 17+**
   - **Apache Maven 3.6+**
   - **Apache Tomcat 10+** (Jakarta EE 10)
   - **MySQL Server 8.x**
 
-  ### Steps
-  1. **Clone / extract** the project.
-  2. **Create the database** using the SQL script in [Database Design](#-database-design).
-  3. **Configure DB credentials** in `src/main/java/com/ems/util/DBConnection.java`:
+  # Steps
+  1. Clone / extract the project.
+  2. Create the database using the SQL script in [Database Design](#-database-design).
+  3. Configure DB credentials in `src/main/java/com/ems/util/DBConnection.java`:
      ```java
      private static final String URL  = "jdbc:mysql://localhost:3306/ems_db?...";
      private static final String USER = "root";
      private static final String PASS = "Arko2004";
      ```
-  4. **Configure email credentials** in `src/main/java/com/ems/util/EmailUtil.java`:
+  4. Configure email credentials in `src/main/java/com/ems/util/EmailUtil.java`:
      ```java
      String from = "diptangshudas7@gmail.com";
      String pass = "whwg yrlv exhv hmya"; 
      ```
-  5. **Build**:
+  5. Build:
      ```bash
      mvn clean package
      ```
@@ -238,8 +238,8 @@ to move the credentials to environment variables / JNDI.
   1. Deploy `target/EmployeeManagementSystem-1.0.war` to Tomcat.
   2. Visit `http://localhost:8080/EmployeeManagementSystem-1.0/`.
   3. Login with:
-     - **Admin:** `admin` / `admin123`
-     - **Employee:** `samay` / `samay123'
+     - Admin: `admin` / `admin123`
+     - Employee: `samay` / `samay123'
 
   ---
 
@@ -275,7 +275,7 @@ to move the credentials to environment variables / JNDI.
 
 
   ## 👤 Author
-  **Name:** Diptangshu Das
-  **Assignment:** Case Study 2 — Employee Management System (Assignment No. 10)
-  **Course:** Advance Java with Web Application 
-  **Team Type:** Individual
+  Name: Diptangshu Das
+  Assignment: Case Study 2 — Employee Management System (Assignment No. 10)
+  Course: Advance Java with Web Application 
+  Team Type: Individual
