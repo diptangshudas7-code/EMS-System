@@ -15,16 +15,12 @@
   4. [Project Structure](#-project-structure)
   5. [Database Design](#-database-design)
   6. [Module-wise Description](#-module-wise-description)
-     - [1. Login Authentication](#1-login-authentication)
-     - [2. CRUD Operations with JDBC](#2-crud-operations-with-jdbc)
-     - [3. Pagination and Sorting](#3-pagination-and-sorting)
-     - [4. Email Notification](#4-email-notification)
-     - [5. Deployment on Apache Tomcat](#5-deployment-on-apache-tomcat)
   7. [Setup & Installation](#-setup--installation)
   8. [Running the Application](#-running-the-application)
   9. [Screenshots / Walkthrough](#-screenshots--walkthrough)
   10. [Testing](#-testing)
-  11. [Author](#-author)
+  11. [Limitations & Future Enhancements](#-limitations--future-enhancements)
+  12. [Author](#-author)
 
   ---
 
@@ -75,12 +71,12 @@
           │   │   ├── Employee.java           # POJO
           │   │   └── User.java               # POJO (username, password, role)
           │   ├── servlet/
-          │   │   ├── LoginServlet.java       #  /login
-          │   │   ├── LogoutServlet.java      #  /logout
-          │   │   ├── EmployeeListServlet.java#  /employees (list + paginate)
-          │   │   ├── AddEmployeeServlet.java #  /addEmployee
-          │   │   ├── UpdateEmployeeServlet.java #  /updateEmployee
-          │   │   └── DeleteEmployeeServlet.java #  /deleteEmployee
+          │   │   ├── LoginServlet.java       # /login
+          │   │   ├── LogoutServlet.java      # /logout
+          │   │   ├── EmployeeListServlet.java# /employees (list + paginate)
+          │   │   ├── AddEmployeeServlet.java # /addEmployee
+          │   │   ├── UpdateEmployeeServlet.java # /updateEmployee
+          │   │   └── DeleteEmployeeServlet.java # /deleteEmployee
           │   └── util/
           │       ├── DBConnection.java       # MySQL connection helper
           │       └── EmailUtil.java          # JavaMail helper
@@ -103,46 +99,55 @@
 
   ### Create the database & tables
   ```sql
-  CREATE DATABASE ems_db;
+  CREATE DATABASE IF NOT EXISTS ems_db;
   USE ems_db;
 
   CREATE TABLE users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      username VARCHAR(50) NOT NULL,
+      username VARCHAR(50) PRIMARY KEY,
       password VARCHAR(50) NOT NULL,
-      role VARCHAR(50) NOT NULL          -- 'admin' or 'employee'
+      role     VARCHAR(20) NOT NULL          -- 'admin' or 'employee'
   );
 
   CREATE TABLE employees (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      department VARCHAR(100),
-      salary DOUBLE,
-      email VARCHAR(100),
-      username VARCHAR(50)
+      id         INT AUTO_INCREMENT PRIMARY KEY,
+      name       VARCHAR(100) NOT NULL,
+      department VARCHAR(50),
+      salary     DOUBLE,
+      email      VARCHAR(100),
+      username   VARCHAR(50) UNIQUE,
+      FOREIGN KEY (username) REFERENCES users(username)
+          ON DELETE CASCADE
   );
   ```
 
   ### Sample seed data
   ```sql
   -- Admin
-  INSERT INTO users VALUES (null, 'admin', 'admin123', 'admin');
+  INSERT INTO users VALUES ('admin', 'admin123', 'admin');
 
   -- Employees
-  INSERT INTO users VALUES (null, 'samay', 'samay123', 'employee');
+  INSERT INTO users VALUES ('john',  'john123', 'employee');
+  INSERT INTO users VALUES ('alice', 'alice123', 'employee');
+
+  INSERT INTO employees(name, department, salary, email, username) VALUES
+  ('John Doe',  'IT',      55000, 'john@example.com',  'john'),
+  ('Alice Roy', 'HR',      48000, 'alice@example.com', 'alice');
+  ```
+
+  ---
 
   ## 🧩 Module-wise Description
 
-  # 1. Login Authentication
-  - `LoginServlet` (`/login`) accepts `username` and `password` via POST.
-  - `UserDAO.authenticate(...)` runs a parameterised SQL query against the `users` table.
+  ### Module 1 — Login Authentication
+  - **`LoginServlet`** (`/login`) accepts `username` and `password` via POST.
+  - **`UserDAO.authenticate(...)`** runs a parameterised SQL query against the `users` table.
   - On success, an `HttpSession` is created with attributes `user` and `role`.
-  - Role-based redirect:
-    - `admin` → 'adminDashboard.jsp'
+  - **Role-based redirect**:
+    - `admin` → `employees?page=1&sortBy=name` (Admin Dashboard)
     - `employee` → `employeeDashboard.jsp`
   - On failure, the user is sent back to `login.jsp` with an "Invalid credentials" message.
 
-  # 2. CRUD Operations with JDBC
+  ### Module 2 — CRUD Operations with JDBC
   All DB calls go through `EmployeeDAO` using `PreparedStatement` (SQL-injection safe).
 
   | Operation | Servlet                       | DAO Method                  |
@@ -156,13 +161,13 @@
   - Validation: `NumberFormatException` for non-numeric salary/id is caught in servlets.
   - All exceptions are logged via `printStackTrace()` so DB errors are surfaced.
 
-  # 3. Pagination and Sorting
+  ### Module 3 — Pagination and Sorting
   Implemented inside `EmployeeListServlet` + `EmployeeDAO.getAll(page, pageSize, sortBy)`.
 
-  - Page size = 5 (configurable).
-  - Total pages = `ceil(totalCount / pageSize)`.
-  - Sortable columns = only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
-any other value falls back to `id`.
+  - **Page size** = 5 (configurable).
+  - **Total pages** = `ceil(totalCount / pageSize)`.
+  - **Sortable columns** — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection); any other value falls
+  back to `id`.
   - Column headers in `adminDashboard.jsp` are clickable links:
     ```html
     <a href="employees?page=1&sortBy=name">Name</a>
@@ -171,20 +176,20 @@ any other value falls back to `id`.
     ```
   - Pagination links at the bottom preserve the current `sortBy`.
 
-  # 4. Email Notification
+  ### Module 4 — Email Notification
   - After a successful `Add`, `AddEmployeeServlet` calls:
     ```java
     EmailUtil.sendEmail(email, "Welcome to EMS",
         "Hi " + name + ", your employee profile has been created.");
     ```
-  - `EmailUtil` uses **Gmail SMTP** (`smtp.gmail.com:587`) with **TLS** and an **App Password** (2FA must be enabled on the
-sender's Gmail account).
+  - `EmailUtil` uses **Gmail SMTP** (`smtp.gmail.com:587`) with **TLS** and an **App Password** (2FA must be enabled on the sender's Gmail
+  account).
   - The same helper can be invoked from `UpdateEmployeeServlet` for edit notifications.
 
-  > ⚠️ Security note: The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its
-best to move the credentials to environment variables / JNDI.
+  > ⚠️  **Security note:** For production, move the credentials to environment variables / JNDI. The current `EmailUtil.java` has the App
+  Password inline for academic/demo purposes.
 
-  #  5. Deployment on Apache Tomcat
+  ### Module 5 — Deployment on Apache Tomcat
   1. Build the WAR:
      ```bash
      mvn clean package
@@ -196,9 +201,10 @@ best to move the credentials to environment variables / JNDI.
      ```
   3. Start Tomcat:
      ```bash
-     $CATALINA_HOME/bin/startup.bat     
+     $CATALINA_HOME/bin/startup.sh      # Linux/macOS
+     $CATALINA_HOME/bin/startup.bat     # Windows
      ```
-  4. Open the browser(Chrome):
+  4. Open the browser:
      ```
      http://localhost:8080/EmployeeManagementSystem-1.0/
      ```
@@ -207,27 +213,27 @@ best to move the credentials to environment variables / JNDI.
 
   ## ⚙ Setup & Installation
 
-  # Prerequisites
+  ### Prerequisites
   - **JDK 17+**
   - **Apache Maven 3.6+**
   - **Apache Tomcat 10+** (Jakarta EE 10)
   - **MySQL Server 8.x**
 
-  # Steps
-  1. Clone / extract the project.
-  2. Create the database using the SQL script in [Database Design](#-database-design).
-  3. Configure DB credentials in `src/main/java/com/ems/util/DBConnection.java`:
+  ### Steps
+  1. **Clone / extract** the project.
+  2. **Create the database** using the SQL script in [Database Design](#-database-design).
+  3. **Configure DB credentials** in `src/main/java/com/ems/util/DBConnection.java`:
      ```java
      private static final String URL  = "jdbc:mysql://localhost:3306/ems_db?...";
      private static final String USER = "root";
-     private static final String PASS = "Arko2004";
+     private static final String PASS = "your_password";
      ```
-  4. Configure email credentials in `src/main/java/com/ems/util/EmailUtil.java`:
+  4. **Configure email credentials** in `src/main/java/com/ems/util/EmailUtil.java`:
      ```java
-     String from = "diptangshudas7@gmail.com";
-     String pass = "whwg yrlv exhv hmya"; 
+     String from = "your_email@gmail.com";
+     String pass = "your_gmail_app_password";
      ```
-  5. Build:
+  5. **Build**:
      ```bash
      mvn clean package
      ```
@@ -238,8 +244,8 @@ best to move the credentials to environment variables / JNDI.
   1. Deploy `target/EmployeeManagementSystem-1.0.war` to Tomcat.
   2. Visit `http://localhost:8080/EmployeeManagementSystem-1.0/`.
   3. Login with:
-     - Admin: `admin` / `admin123`
-     - Employee: `samay` / `samay123'
+     - **Admin:** `admin` / `admin123`
+     - **Employee:** `john` / `john123` (or `alice` / `alice123`)
 
   ---
 
@@ -270,12 +276,10 @@ best to move the credentials to environment variables / JNDI.
   | 9 | Direct URL access by non-admin                | Redirected to `login.jsp`                      | ✅ Pass |
   |10| Logout                                        | Session invalidated, redirected to login       | ✅ Pass |
 
-  ---
-
 
 
   ## 👤 Author
-  Name: Diptangshu Das
-  Assignment: Case Study 2 — Employee Management System (Assignment No. 10)
-  Course: Advance Java with Web Application 
-  Team Type: Individual
+  **Name:** Diptangshu Das
+  **Assignment:** Case Study 2 — Employee Management System (Assignment No. 10)
+  **Course:** Advance Java
+  **Team Type:** Individual
