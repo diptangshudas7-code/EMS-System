@@ -1,4 +1,4 @@
-  # 🏢 Employee Management System (EMS)
+# 🏢 Employee Management System (EMS)
 
   > **Case Study 2 — Advance Java Project**
   > Assignment No. 10 | Individual Submission
@@ -24,8 +24,7 @@
   8. [Running the Application](#-running-the-application)
   9. [Screenshots / Walkthrough](#-screenshots--walkthrough)
   10. [Testing](#-testing)
-  11. [Limitations & Future Enhancements](#-limitations--future-enhancements)
-  12. [Author](#-author)
+  11. [Author](#-author)
 
   ---
 
@@ -104,42 +103,33 @@
 
   ### Create the database & tables
   ```sql
-  CREATE DATABASE IF NOT EXISTS ems_db;
+  CREATE DATABASE ems_db;
   USE ems_db;
 
   CREATE TABLE users (
-      username VARCHAR(50) PRIMARY KEY,
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(50) NOT NULL,
       password VARCHAR(50) NOT NULL,
-      role     VARCHAR(20) NOT NULL          -- 'admin' or 'employee'
+      role VARCHAR(50) NOT NULL          -- 'admin' or 'employee'
   );
 
   CREATE TABLE employees (
-      id         INT AUTO_INCREMENT PRIMARY KEY,
-      name       VARCHAR(100) NOT NULL,
-      department VARCHAR(50),
-      salary     DOUBLE,
-      email      VARCHAR(100),
-      username   VARCHAR(50) UNIQUE,
-      FOREIGN KEY (username) REFERENCES users(username)
-          ON DELETE CASCADE
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      department VARCHAR(100),
+      salary DOUBLE,
+      email VARCHAR(100),
+      username VARCHAR(50)
   );
   ```
 
   ### Sample seed data
   ```sql
   -- Admin
-  INSERT INTO users VALUES ('admin', 'admin123', 'admin');
+  INSERT INTO users VALUES (null, 'admin', 'admin123', 'admin');
 
   -- Employees
-  INSERT INTO users VALUES ('john',  'john123', 'employee');
-  INSERT INTO users VALUES ('alice', 'alice123', 'employee');
-
-  INSERT INTO employees(name, department, salary, email, username) VALUES
-  ('John Doe',  'IT',      55000, 'john@example.com',  'john'),
-  ('Alice Roy', 'HR',      48000, 'alice@example.com', 'alice');
-  ```
-
-  ---
+  INSERT INTO users VALUES (null, 'samay', 'samay123', 'employee');
 
   ## 🧩 Module-wise Description
 
@@ -148,7 +138,7 @@
   - **`UserDAO.authenticate(...)`** runs a parameterised SQL query against the `users` table.
   - On success, an `HttpSession` is created with attributes `user` and `role`.
   - **Role-based redirect**:
-    - `admin` → `employees?page=1&sortBy=name` (Admin Dashboard)
+    - `admin` → 'adminDashboard.jsp'
     - `employee` → `employeeDashboard.jsp`
   - On failure, the user is sent back to `login.jsp` with an "Invalid credentials" message.
 
@@ -206,7 +196,6 @@
      ```
   3. Start Tomcat:
      ```bash
-     $CATALINA_HOME/bin/startup.sh      # Linux/macOS
      $CATALINA_HOME/bin/startup.bat     # Windows
      ```
   4. Open the browser:
@@ -231,12 +220,12 @@
      ```java
      private static final String URL  = "jdbc:mysql://localhost:3306/ems_db?...";
      private static final String USER = "root";
-     private static final String PASS = "your_password";
+     private static final String PASS = "Arko2004";
      ```
   4. **Configure email credentials** in `src/main/java/com/ems/util/EmailUtil.java`:
      ```java
-     String from = "your_email@gmail.com";
-     String pass = "your_gmail_app_password";
+     String from = "diptangshudas7@gmail.com";
+     String pass = "whwg yrlv exhv hmya"; 
      ```
   5. **Build**:
      ```bash
@@ -245,12 +234,12 @@
 
   ---
 
-  ##  Running the Application
-  1. Deploy 'target/EmployeeManagementSystem-1.0.war' to Tomcat.
-  2. Visit 'http://localhost:8080/EmployeeManagementSystem-1.0/'.
+  ## ▶ Running the Application
+  1. Deploy `target/EmployeeManagementSystem-1.0.war` to Tomcat.
+  2. Visit `http://localhost:8080/EmployeeManagementSystem-1.0/`.
   3. Login with:
-     - Admin: Username: admin Password: admin123
-     - Employee: Username: samay Password: samay123
+     - **Admin:** `admin` / `admin123`
+     - **Employee:** `samay` / `samay123'
 
   ---
 
@@ -281,9 +270,12 @@
   | 9 | Direct URL access by non-admin                | Redirected to `login.jsp`                      | ✅ Pass |
   |10| Logout                                        | Session invalidated, redirected to login       | ✅ Pass |
 
+  ---
 
-  ##  Author
-  Name: Diptangshu Das
-  Assignment: Case Study 2 — Employee Management System (Assignment No. 10)
+
+
+  ## 👤 Author
+  **Name:** Diptangshu Das
+  **Assignment:** Case Study 2 — Employee Management System (Assignment No. 10)
   **Course:** Advance Java
   **Team Type:** Individual
