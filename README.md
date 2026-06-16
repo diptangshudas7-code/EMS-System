@@ -18,7 +18,8 @@
   7. [Setup & Installation](#-setup--installation)
   8. [Running the Application](#-running-the-application)
   9. [Testing](#-testing)
-  10. [Author](#-author)
+  10. 
+  11. [Author](#-author)
 
   ---
 
@@ -241,7 +242,16 @@
 
   ---
 
+   ## 🖼 Screenshots / Walkthrough
+  | Screen                | URL                                   |
+  |-----------------------|---------------------------------------|
+  | Login                 | `images/login.png`                    |
+  | Admin Dashboard       | `images/admin-dashboard.png`          |
+  | Add Employee          | `images/add-employee.png`             |
+  | Edit Employee         | `images/edit-employee.png`            |
+  | Employee Profile      | `images/employee-profile.png`         |
 
+  ----
 
   ## ✅ Testing
   | # | Test Case                                     | Expected Result                                | Status |
@@ -257,7 +267,7 @@
   | 9 | Direct URL access by non-admin                | Redirected to `login.jsp`                      | ✅ Pass |
   |10| Logout                                        | Session invalidated, redirected to login       | ✅ Pass |
 
-
+  -----
 
   ## 👤 Author
   **Name:** Diptangshu Das
