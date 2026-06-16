@@ -75,12 +75,12 @@
           │   │   ├── Employee.java           # POJO
           │   │   └── User.java               # POJO (username, password, role)
           │   ├── servlet/
-          │   │   ├── LoginServlet.java       # /login
-          │   │   ├── LogoutServlet.java      # /logout
-          │   │   ├── EmployeeListServlet.java# /employees (list + paginate)
-          │   │   ├── AddEmployeeServlet.java # /addEmployee
-          │   │   ├── UpdateEmployeeServlet.java # /updateEmployee
-          │   │   └── DeleteEmployeeServlet.java # /deleteEmployee
+          │   │   ├── LoginServlet.java       #  /login
+          │   │   ├── LogoutServlet.java      #  /logout
+          │   │   ├── EmployeeListServlet.java#  /employees (list + paginate)
+          │   │   ├── AddEmployeeServlet.java #  /addEmployee
+          │   │   ├── UpdateEmployeeServlet.java #  /updateEmployee
+          │   │   └── DeleteEmployeeServlet.java #  /deleteEmployee
           │   └── util/
           │       ├── DBConnection.java       # MySQL connection helper
           │       └── EmailUtil.java          # JavaMail helper
