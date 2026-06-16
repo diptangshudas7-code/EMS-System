@@ -156,12 +156,12 @@
   - Validation: `NumberFormatException` for non-numeric salary/id is caught in servlets.
   - All exceptions are logged via `printStackTrace()` so DB errors are surfaced.
 
-  ### 3. Pagination and Sorting
+  # 3. Pagination and Sorting
   Implemented inside `EmployeeListServlet` + `EmployeeDAO.getAll(page, pageSize, sortBy)`.
 
   - Page size = 5 (configurable).
   - Total pages = `ceil(totalCount / pageSize)`.
-  - Sortable columns — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
+  - Sortable columns = only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
 any other value falls back to `id`.
   - Column headers in `adminDashboard.jsp` are clickable links:
     ```html
