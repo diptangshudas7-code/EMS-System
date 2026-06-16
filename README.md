@@ -17,10 +17,8 @@
   6. [Module-wise Description](#-module-wise-description)
   7. [Setup & Installation](#-setup--installation)
   8. [Running the Application](#-running-the-application)
-  9. [Screenshots / Walkthrough](#-screenshots--walkthrough)
-  10. [Testing](#-testing)
-  11. [Limitations & Future Enhancements](#-limitations--future-enhancements)
-  12. [Author](#-author)
+  9. [Testing](#-testing)
+  10. [Author](#-author)
 
   ---
 
@@ -102,21 +100,20 @@
   CREATE DATABASE IF NOT EXISTS ems_db;
   USE ems_db;
 
-  CREATE TABLE users (
-      username VARCHAR(50) PRIMARY KEY,
+ CREATE TABLE users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(50) NOT NULL,
       password VARCHAR(50) NOT NULL,
-      role     VARCHAR(20) NOT NULL          -- 'admin' or 'employee'
+      role VARCHAR(50) NOT NULL          -- 'admin' or 'employee'
   );
 
-  CREATE TABLE employees (
-      id         INT AUTO_INCREMENT PRIMARY KEY,
-      name       VARCHAR(100) NOT NULL,
-      department VARCHAR(50),
-      salary     DOUBLE,
-      email      VARCHAR(100),
-      username   VARCHAR(50) UNIQUE,
-      FOREIGN KEY (username) REFERENCES users(username)
-          ON DELETE CASCADE
+ CREATE TABLE employees (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      department VARCHAR(100),
+      salary DOUBLE,
+      email VARCHAR(100),
+      username VARCHAR(50)
   );
   ```
 
@@ -126,12 +123,8 @@
   INSERT INTO users VALUES ('admin', 'admin123', 'admin');
 
   -- Employees
-  INSERT INTO users VALUES ('john',  'john123', 'employee');
-  INSERT INTO users VALUES ('alice', 'alice123', 'employee');
+  INSERT INTO users VALUES (null, 'samay', 'samay123', 'employee');
 
-  INSERT INTO employees(name, department, salary, email, username) VALUES
-  ('John Doe',  'IT',      55000, 'john@example.com',  'john'),
-  ('Alice Roy', 'HR',      48000, 'alice@example.com', 'alice');
   ```
 
   ---
@@ -143,7 +136,7 @@
   - **`UserDAO.authenticate(...)`** runs a parameterised SQL query against the `users` table.
   - On success, an `HttpSession` is created with attributes `user` and `role`.
   - **Role-based redirect**:
-    - `admin` → `employees?page=1&sortBy=name` (Admin Dashboard)
+    - `admin` → `adminDashboard.jsp` 
     - `employee` → `employeeDashboard.jsp`
   - On failure, the user is sent back to `login.jsp` with an "Invalid credentials" message.
 
@@ -201,10 +194,9 @@
      ```
   3. Start Tomcat:
      ```bash
-     $CATALINA_HOME/bin/startup.sh      # Linux/macOS
-     $CATALINA_HOME/bin/startup.bat     # Windows
+     $CATALINA_HOME/bin/startup.bat     
      ```
-  4. Open the browser:
+  4. Open the browser(Chrome):
      ```
      http://localhost:8080/EmployeeManagementSystem-1.0/
      ```
@@ -224,14 +216,14 @@
   2. **Create the database** using the SQL script in [Database Design](#-database-design).
   3. **Configure DB credentials** in `src/main/java/com/ems/util/DBConnection.java`:
      ```java
-     private static final String URL  = "jdbc:mysql://localhost:3306/ems_db?...";
+     private static final String URL  = "jdbc:mysql://localhost:3306/ems_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
      private static final String USER = "root";
-     private static final String PASS = "your_password";
+     private static final String PASS = "Arko2004";
      ```
   4. **Configure email credentials** in `src/main/java/com/ems/util/EmailUtil.java`:
      ```java
-     String from = "your_email@gmail.com";
-     String pass = "your_gmail_app_password";
+     String from = "diptangshudas7@gmail.com";
+     String pass = "whwg yrlv exhv hmya";
      ```
   5. **Build**:
      ```bash
@@ -245,22 +237,11 @@
   2. Visit `http://localhost:8080/EmployeeManagementSystem-1.0/`.
   3. Login with:
      - **Admin:** `admin` / `admin123`
-     - **Employee:** `john` / `john123` (or `alice` / `alice123`)
+     - **Employee:** `samay` / `samay123` 
 
   ---
 
-  ## 🖼 Screenshots / Walkthrough
-  | Screen                | URL                                   |
-  |-----------------------|---------------------------------------|
-  | Login                 | `/login.jsp`                          |
-  | Admin Dashboard       | `/employees?page=1&sortBy=name`       |
-  | Add Employee          | `/addEmployee.jsp`                    |
-  | Edit Employee         | `/editEmployee.jsp?id=...`            |
-  | Employee Profile      | `/employeeDashboard.jsp`              |
 
-  *(Add screenshots here before submission — drag images into the repo and link them.)*
-
-  ---
 
   ## ✅ Testing
   | # | Test Case                                     | Expected Result                                | Status |
