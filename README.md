@@ -159,7 +159,7 @@
   ### 3. Pagination and Sorting
   Implemented inside `EmployeeListServlet` + `EmployeeDAO.getAll(page, pageSize, sortBy)`.
 
-  - **Page size** = 5 (configurable).
+  - Page size = 5 (configurable).
   - **Total pages** = `ceil(totalCount / pageSize)`.
   - **Sortable columns** — only `name`, `department`, `salary` are accepted (whitelisted in DAO to prevent SQL injection);
 any other value falls back to `id`.
