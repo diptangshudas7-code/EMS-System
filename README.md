@@ -181,8 +181,8 @@ any other value falls back to `id`.
 sender's Gmail account).
   - The same helper can be invoked from `UpdateEmployeeServlet` for edit notifications.
 
-  > ⚠️  Security note: The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its best
-to move the credentials to environment variables / JNDI.
+  > ⚠️ Security note: The current `EmailUtil.java` has the App Password inline for academic/demo purposes. So for production, its
+best to move the credentials to environment variables / JNDI.
 
   #  5. Deployment on Apache Tomcat
   1. Build the WAR:
