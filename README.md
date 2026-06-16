@@ -243,13 +243,13 @@
   ---
 
    ## 🖼 Screenshots / Walkthrough
-  | Screen                | URL                                   |
-  |-----------------------|---------------------------------------|
-  | Login                 | `images/login.png`                    |
-  | Admin Dashboard       | `images/admin-dashboard.png`          |
-  | Add Employee          | `images/add-employee.png`             |
-  | Edit Employee         | `images/edit-employee.png`            |
-  | Employee Profile      | `images/employee-profile.png`         |
+  | Screen                | URL                                                                        |
+  |-----------------------|----------------------------------------------------------------------------|
+  | Login                 | <img src="images/login.png" width="300" alt="Login">                       |
+  | Admin Dashboard       | <img src="images/admin-dashboard.png" width="300" alt="Admin Dashboard">   |                              
+  | Add Employee          | <img src="images/add-employee.png" width="300" alt="Add Employee">         |
+  | Edit Employee         | <img src="images/edit-employee.png" width="300" alt="Edit Employee">       |
+  | Employee Profile      | <img src="images/employee-profile.png" width="300" alt="Employee Profile"> |
 
   ----
 
